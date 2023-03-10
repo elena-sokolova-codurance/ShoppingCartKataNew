@@ -29,10 +29,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyDbContext>(options =>
 {
 
-    //var hostname = Environment.GetEnvironmentVariable("RDS_HOSTNAME");
-    //var connectionString = $"Host={hostname};Username=academyadmin;Password=shWWq44NEEVuSLh;Database=ebdb";
+    var hostname = Environment.GetEnvironmentVariable("RDS_HOSTNAME");
+    var connectionString = $"Host={hostname};Username=academyadmin;Password=shWWq44NEEVuSLh;Database=ebdb";
 
-    var connectionString = "Host=localhost;Username=postgres;Password=5432;Database=postgres";
+    //var connectionString = "Host=localhost;Username=postgres;Password=5432;Database=postgres";
     options.UseNpgsql(connectionString);
 });
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartEntityRepository>();
