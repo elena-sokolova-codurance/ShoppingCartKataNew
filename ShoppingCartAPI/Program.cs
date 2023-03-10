@@ -26,12 +26,23 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartEntityRepository>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
+builder.Services.AddScoped<IProductRepository, ProductEntityRepository>();
+builder.Services.AddScoped<ProductService>();
+
 
 var app = builder.Build();
 
 app.CreateDbIfNotExists();
 
 app.MapGet("/", () => "Hello World!");
+
+app.MapGet("/products", (ProductService productService) =>
+{
+    var availableProducts = productService.GetAvailableProducts();
+    var options = new JsonSerializerOptions { WriteIndented = true };
+    return JsonSerializer.Serialize(availableProducts, options);
+});
+
 app.MapGet("/host-name", () => Environment.GetEnvironmentVariable("RDS_HOSTNAME"));
 
 app.MapPost("/add-item", (IShoppingCartService shoppingCartService, ItemRequest request) =>
@@ -49,11 +60,10 @@ app.MapGet("/shopping-cart", (IShoppingCartService shoppingCartService) =>
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
 
 app.UseHttpsRedirection();
 
