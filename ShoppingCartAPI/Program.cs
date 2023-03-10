@@ -5,12 +5,12 @@ using ShoppingCartAPI.Data;
 using ShoppingCartAPI.Services;
 
 
-var ShoppingCartCORSPolicy = "_ShoppingCartCORSPolicy";
+var shoppingCartCorsPolicy = "_ShoppingCartCORSPolicy";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: ShoppingCartCORSPolicy,
+    options.AddPolicy(name: shoppingCartCorsPolicy,
         policy =>
         {
             policy.AllowAnyOrigin()
@@ -76,7 +76,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.UseCors(ShoppingCartCORSPolicy);
+app.UseCors(shoppingCartCorsPolicy);
 
 app.UseHttpsRedirection();
 
