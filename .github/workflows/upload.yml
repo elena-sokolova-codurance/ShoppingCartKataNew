@@ -1,0 +1,50 @@
+name: Upload backend
+
+on: 
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.14'
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: |
+          cd ShoppingCartAPI
+          dotnet build --configuration Release --no-restore
+          dotnet publish -c Release -f net6.0 -o ./publish --runtime linux-x64 /p:PublishProfile=EBDeploy
+    
+      - name: Zip application
+        run: |
+          cd publish
+          zip -r ../shopping-cart.zip .
+          cd ..
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Deploy static site to S3 bucket
+        run: aws s3 sync shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675 --delete
+
+      - name: Create application version
+        run: aws elasticbeanstalk create-application-version --application-name shopping-cart-api --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-300563897675",S3Key="shopping-cart.zip"
+
+      - name: Update environment
+        run: aws elasticbeanstalk update-environment --environment-name Shoppingcartapi-env
