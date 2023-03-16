@@ -43,6 +43,7 @@ jobs:
     - name: Deploy static site to S3 bucket
       run: |
         ls -l ShoppingCartAPI
+        cd ShoppingCartAPI
         aws s3 sync shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675 --delete
 
     - name: Create application version
