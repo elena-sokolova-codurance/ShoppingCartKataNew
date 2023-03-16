@@ -44,7 +44,7 @@ jobs:
       run: |
         ls -l ShoppingCartAPI
         cd ShoppingCartAPI
-        aws s3 sync shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675 --delete
+        aws s3 sync shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675/shopping-cart.zip --delete
 
     - name: Create application version
       run: aws elasticbeanstalk create-application-version --application-name shopping-cart-api --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-300563897675",S3Key="shopping-cart.zip"
