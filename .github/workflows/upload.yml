@@ -41,7 +41,9 @@ jobs:
         aws-region: eu-central-1
 
     - name: Deploy static site to S3 bucket
-      run: aws s3 sync ShoppingCartAPI/shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675 --delete
+      run: |
+        ll
+        aws s3 sync ./ShoppingCartAPI/shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675 --delete
 
     - name: Create application version
       run: aws elasticbeanstalk create-application-version --application-name shopping-cart-api --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-300563897675",S3Key="shopping-cart.zip"
