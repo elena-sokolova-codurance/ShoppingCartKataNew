@@ -47,7 +47,7 @@ jobs:
         aws s3 cp ShoppingCartAPI/shopping-cart.zip s3://elasticbeanstalk-eu-central-1-300563897675/shopping-cart.zip 
 
     - name: Create application version
-      run: aws elasticbeanstalk create-application-version --application-name shopping-cart-api --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-300563897675",S3Key="shopping-cart.zip"
+      run: aws elasticbeanstalk create-application-version --application-name shopping-cart-api --version-label v1.0 --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-300563897675",S3Key="shopping-cart.zip"
 
     - name: Update environment
-      run: aws elasticbeanstalk update-environment --environment-name Shoppingcartapi-env
+      run: aws elasticbeanstalk update-environment --environment-name Shoppingcartapi-env --version-label v1.0
